@@ -1,0 +1,168 @@
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+  font-family: Arial, sans-serif;
+  background: #0b0b0b;
+  color: #fff;
+}
+
+.page{
+  min-height: 100vh;
+  background: #303030; /* comme ton screenshot */
+  padding: 20px 30px;
+}
+
+/* TOP BAR */
+.topbar{
+  display:flex;
+  align-items:center;
+  gap: 30px;
+}
+
+.brand img{
+  height: 70px;
+  width: auto;
+}
+
+.nav{
+  display:flex;
+  gap: 40px;
+  align-items:center;
+}
+
+.nav-link{
+  color:#fff;
+  text-decoration:none;
+  font-size: 18px;
+  font-weight: 600;
+  opacity: .95;
+}
+
+.nav-link.active{
+  text-decoration: underline;
+}
+
+.spacer{ flex:1; }
+
+.search{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  background: rgba(255,255,255,.55);
+  border-radius: 8px;
+  padding: 10px 14px;
+  width: 320px;
+}
+
+.search-icon{
+  color:#222;
+}
+
+.search input{
+  border:none;
+  outline:none;
+  background:transparent;
+  width:100%;
+  color:#222;
+  font-size: 16px;
+}
+
+.search input::placeholder{
+  color:#333;
+}
+
+/* CONTENT */
+.content{
+  margin-top: 60px;
+  padding-left: 30px;
+}
+
+.content h2{
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 40px;
+}
+
+/* GRID des catégories */
+.grid{
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
+  gap: 26px 50px; /* vertical / horizontal */
+  align-items: center;
+  max-width: 1200px;
+}
+
+/* Item = checkbox + pill */
+.item{
+  display:flex;
+  align-items:center;
+  gap: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Checkbox style simple comme sur ton image */
+.item input[type="checkbox"]{
+  width: 20px;
+  height: 20px;
+  accent-color: #caa24a; /* couleur check */
+  cursor:pointer;
+}
+
+/* Pills */
+.pill{
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  padding: 10px 26px;
+  border-radius: 999px;
+  background: #1f2c55;             /* bleu sombre */
+  border: 1.5px solid #caa24a;      /* contour doré */
+  color:#fff;
+  font-weight: 700;
+  font-size: 20px;
+  min-width: 140px;
+}
+
+/* Responsive */
+@media (max-width: 1100px){
+  .grid{ grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+}
+
+@media (max-width: 700px){
+  .topbar{ flex-wrap: wrap; }
+  .search{ width: 100%; }
+  .grid{ grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+}
+
+.actions{
+  grid-column: 1 / -1;
+  margin-top: 10px;
+}
+
+.btn{
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.results{
+  margin-top: 30px;
+  max-width: 900px;
+}
+
+.results h3{
+  margin-bottom: 12px;
+}
+
+.results ul{
+  margin-left: 18px;
+  line-height: 1.6;
+}
+
+.item input[type="checkbox"]:checked + .pill {
+  background: #caa24a;
+  color: #1f2c55;
+}

@@ -1,0 +1,205 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    color: white;
+    background: black;
+}
+
+.hero{
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;
+    background-image:
+        linear-gradient(90deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,.2) 55%, rgba(0,0,0,.65) 100%),
+        url("../images/fond.png");
+    background-size: cover;
+    background-position: center;
+}
+
+/* NAVBAR */
+
+.topbar{
+    display: flex;
+    align-items: center;
+    padding: 20px 40px;
+}
+
+.brand img{
+    height: 40px;
+}
+
+.navlinks{
+    margin-left: 40px;
+    display: flex;
+    gap: 30px;
+}
+
+.navlinks a{
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+}
+
+.spacer{
+    flex: 1;
+}
+
+.auth{
+    margin-right: 20px;
+    font-size: 12px;
+}
+
+.search{
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.15);
+    padding: 8px 12px;
+    border-radius: 10px;
+    backdrop-filter: blur(6px);
+}
+
+.search input{
+    border: none;
+    background: transparent;
+    color: white;
+    margin-left: 5px;
+    outline: none;
+}
+
+/* CONTENU */
+
+.main{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 60px 60px 80px 60px;
+    min-height: calc(100vh - 80px);
+}
+
+.left h1{
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.left p{
+    margin-bottom: 30px;
+    color: rgba(255,255,255,0.8);
+}
+
+.movie-title{
+    font-size: 60px;
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+
+.pills{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.pill{
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(120,80,80,0.6);
+    font-size: 12px;
+}
+
+.rating{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stars{
+    display: flex;
+    gap: 4px;
+}
+
+.star{
+    width: 14px;
+    height: 14px;
+    background: gold;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.star.inactive{
+    opacity: 0.3;
+}
+
+/* CHATBOT */
+
+.bot{
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.bubble{
+    background: rgba(255,255,255,0.15);
+    padding: 12px 15px;
+    border-radius: 15px;
+    backdrop-filter: blur(8px);
+    font-size: 13px;
+}
+
+.avatar{
+    width: 45px;
+    height: 45px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* FLÈCHES */
+
+.arrow{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.arrow.left{
+    left: 30px;
+}
+
+.arrow.right{
+    right: 30px;
+}
+
+/* DOTS */
+
+.dots{
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.dot{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+}
+
+.dot.active{
+    background: white;
+}
