@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AiRec - Recherche film</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/recherche_film.css') }}">
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+        <div class="brand">
+            <img src="{{ url_for('static', filename='images/airec_logo.png') }}" alt="Logo">
+        </div>
+
+        <nav class="navlinks">
+            <a href="{{ url_for('index') }}">Accueil</a>
+            <a href="{{ url_for('categories') }}">Catégorie</a>
+            <a href="{{ url_for('login') }}">Se connecter/S'inscrire</a>
+        </nav>
+
+        <div class="spacer"></div>
+
+
+        <form class="search" action="{{ url_for('recherche_film') }}" method="GET">
+            <span>🔎</span>
+            <input type="text" name="q" placeholder="Chercher un film , série ..." required>
+        </form>
+    </header>
+
+  <!-- PAGE -->
+  <main class="page">
+    <section class="hero">
+      <div class="left">
+        <h1 class="title">Sinners (2025)</h1>
+
+        <div class="poster-wrap">
+          <img class="poster" src="{{ url_for('static', filename='images/sinners.jpg') }}" alt="Sinners">
+        </div>
+      </div>
+
+      <div class="right">
+        <h2 class="section-title">Description</h2>
+        <p class="desc">
+          Tentant de laisser leur vie troublée derrière eux, deux frères jumeaux retournent
+          dans leur ville natale pour prendre un nouveau départ, mais ils découvrent qu’un mal
+          encore plus grand les attend pour les accueillir à nouveau.
+        </p>
+
+        <div class="ratings">
+          <div class="line">
+            <span class="label">Avis(358) :</span>
+            <div class="stars static" aria-label="Note moyenne">
+              <span class="star filled">★</span>
+              <span class="star filled">★</span>
+              <span class="star filled">★</span>
+              <span class="star filled">★</span>
+              <span class="star filled">★</span>
+            </div>
+            <span class="score">9.8/10</span>
+          </div>
+
+          <div class="line">
+            <span class="label">Mon avis :</span>
+
+            <!-- étoiles cliquables -->
+            <div class="stars user" id="userStars" role="radiogroup" aria-label="Votre note">
+              <button type="button" class="star-btn" data-value="1" aria-label="1 étoile">★</button>
+              <button type="button" class="star-btn" data-value="2" aria-label="2 étoiles">★</button>
+              <button type="button" class="star-btn" data-value="3" aria-label="3 étoiles">★</button>
+              <button type="button" class="star-btn" data-value="4" aria-label="4 étoiles">★</button>
+              <button type="button" class="star-btn" data-value="5" aria-label="5 étoiles">★</button>
+            </div>
+
+            <span class="my-score"><span id="myScore">0</span>/5</span>
+
+            <!-- hidden input si tu veux envoyer au backend plus tard -->
+            <input type="hidden" id="ratingValue" name="rating" value="0">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAROUSEL -->
+    <section class="reco">
+      <h3 class="reco-title">Vous pourriez aussi aimer...</h3>
+
+      <div class="carousel">
+        <button class="car-arrow left" type="button" aria-label="Précédent" id="prevBtn">‹</button>
+
+        <div class="car-track" id="track">
+          <img src="{{ url_for('static', filename='images/film_1.jpg') }}" alt="Film 1" class="car-item">
+          <img src="{{ url_for('static', filename='images/film_2.jpg') }}" alt="Film 2" class="car-item">
+          <img src="{{ url_for('static', filename='images/film_3.jpg') }}" alt="Film 3" class="car-item">
+          <img src="{{ url_for('static', filename='images/film_4.jpg') }}" alt="Film 4" class="car-item">
+          <img src="{{ url_for('static', filename='images/film_5.jpg') }}" alt="Film 5" class="car-item">
+          <img src="{{ url_for('static', filename='images/film_6.jpg') }}" alt="Film 6" class="car-item">
+          <img src="{{ url_for('static', filename='images/film_7.jpg') }}" alt="Film 7" class="car-item">
+        </div>
+
+        <button class="car-arrow right" type="button" aria-label="Suivant" id="nextBtn">›</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/recherche_film.js') }}"></script>
+</body>
+</html>

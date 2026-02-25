@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AiRec - Catégories</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/categories.css') }}">
+</head>
+<body>
+
+  <div class="page">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+        <div class="brand">
+            <img src="{{ url_for('static', filename='images/airec_logo.png') }}" alt="Logo">
+        </div>
+
+        <nav class="navlinks">
+            <a href="{{ url_for('index') }}">Accueil</a>
+            <a href="#">Catégorie</a>
+            <a href="{{ url_for('login') }}">Se connecter/S'inscrire</a>
+        </nav>
+
+        <div class="spacer"></div>
+
+
+        <form class="search" action="{{ url_for('recherche_film') }}" method="GET">
+            <span>🔎</span>
+            <input type="text" name="q" placeholder="Chercher un film , série ..." required>
+        </form>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <h2>Choisissez des catégories :</h2>
+
+      <form class="grid" method="POST">
+
+        {% for genre in genres %}
+        <label class="item">
+          <input type="checkbox"
+                  name="genres"
+                  value="{{ genre }}"
+                  {% if genre in selected %}checked{% endif %}>
+
+          <span class="pill">{{ genre }}</span>
+        </label>
+        {% endfor %}
+        <div class="actions">
+          <button type="submit" class="btn">Valider</button>
+        </div>
+
+
+      </form>
+      {% if films %}
+        <div class="results">
+          <h3>Films trouvés ({{ films|length }}) :</h3>
+          <ul>
+            {% for film in films %}
+              <li>{{ film }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+
+    </main>
+
+  </div>
+
+</body>
+</html>
