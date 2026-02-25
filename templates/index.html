@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>AiRec</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Lien vers le CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<section class="hero">
+
+    <header class="topbar">
+        <div class="brand">
+            <img src="{{ url_for('static', filename='images/airec_logo.png') }}" alt="Logo">
+        </div>
+
+        <nav class="navlinks">
+            <a href="#">Accueil</a>
+            <a href="{{ url_for('categories') }}">Catégorie</a>
+            <a href="{{ url_for('login') }}">Se connecter/S'inscrire</a>
+        </nav>
+
+        <div class="spacer"></div>
+
+
+        <form class="search" action="{{ url_for('recherche_film') }}" method="GET">
+            <span>🔎</span>
+            <input type="text" name="q" placeholder="Chercher un film , série ..." required>
+        </form>
+    </header>
+
+    <!-- Flèches -->
+    <div class="arrow left">‹</div>
+    <div class="arrow right">›</div>
+
+    <main class="main">
+        <div class="left">
+
+            <h1>Découvrez des films faits<br>pour vous grâce à l’IA</h1>
+            <p>Des recommandations personnalisées selon vos goûts et vos avis.</p>
+
+            <div class="movie-title">
+                <span>JOHN</span>
+                <span>WICK 5</span>
+            </div>
+
+            <div class="pills">
+                <div class="pill">Action</div>
+                <div class="pill">Crime</div>
+                <div class="pill">Thriller</div>
+            </div>
+
+            <div class="rating">
+                <div class="stars">
+                    <span class="star"></span>
+                    <span class="star"></span>
+                    <span class="star"></span>
+                    <span class="star"></span>
+                    <span class="star inactive"></span>
+                </div>
+                <span>8.5/10</span>
+            </div>
+
+        </div>
+
+        <div class="bot">
+            <div class="bubble">
+                <strong>Salut !</strong>
+                Comment je peux vous aider aujourd'hui ?
+            </div>
+            <div class="avatar">🤖</div>
+        </div>
+
+    </main>
+
+    <div class="dots">
+        <span class="dot"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+</section>
+
+</body>
+</html>
