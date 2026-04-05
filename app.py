@@ -18,6 +18,10 @@ def recherche_film():
     query = request.args.get("q")  # récupère ce qui a été tapé
     return render_template("recherche_film.html", query=query)
 
+@app.route('/film/<int:movie_id>')
+def film_detail(movie_id):
+    return render_template('recherche_film.html')
+
 @app.route('/categories', methods=["GET", "POST"])
 def categories():
     genres = separer_genre()
