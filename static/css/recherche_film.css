@@ -124,9 +124,6 @@ body{
   font-size: 26px;
 }
 
-.static .star{ color: #f1cf57; }
-.static .star.filled{ color:#f1cf57; }
-
 .score{
   font-size: 20px;
   opacity: .95;
@@ -166,33 +163,38 @@ body{
 
 /* CAROUSEL */
 .carousel{
-  position: relative;
-  display:flex;
-  align-items:center;
-  gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .car-arrow{
   width: 46px;
   height: 46px;
+  flex-shrink: 0;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,.25);
   background: rgba(0,0,0,.25);
-  color:#fff;
-  cursor:pointer;
-  display:grid;
-  place-items:center;
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
   font-size: 26px;
 }
 
 .car-arrow:hover{ background: rgba(0,0,0,.40); }
 
 .car-track{
-  overflow: hidden;
-  width: min(1200px, 86vw);
-  display:flex;
-  gap: 26px;
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  overflow-x: auto;
   scroll-behavior: smooth;
+  scrollbar-width: none;        /* Firefox */
+}
+
+.car-track::-webkit-scrollbar{
+  display: none;                /* Chrome/Safari */
 }
 
 .car-item{
@@ -200,7 +202,7 @@ body{
   height: 270px;
   object-fit: cover;
   border-radius: 6px;
-  flex: 0 0 auto;
+  flex: 0 0 190px;              /* jamais rogné */
 }
 
 /* responsive */

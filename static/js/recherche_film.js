@@ -16,9 +16,29 @@ function getMovieIdFromURL() {
 function renderAvgStars(ratingOutOf5) {
   const container = document.getElementById("avgStars");
   if (!container) return;
-  container.querySelectorAll(".star").forEach((star, idx) => {
-    star.classList.toggle("filled", idx < Math.round(ratingOutOf5));
-  });
+
+  container.innerHTML = "";
+
+  for (let i = 1; i <= 5; i++) {
+    const fill = Math.min(Math.max(ratingOutOf5 - (i - 1), 0), 1); // 0 à 1
+    const pct  = Math.round(fill * 100);
+
+    const id = `star-grad-${i}`;
+    const svg = `
+      <svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="${id}" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="${pct}%"       stop-color="#f1cf57"/>
+            <stop offset="${pct}%"       stop-color="#bcbcbc"/>
+          </linearGradient>
+        </defs>
+        <polygon
+          points="13,2 16,9 24,9 18,14 20,22 13,17 6,22 8,14 2,9 10,9"
+          fill="url(#${id})"
+        />
+      </svg>`;
+    container.insertAdjacentHTML("beforeend", svg);
+  }
 }
 
 function renderUserStars(ratingOutOf5) {
@@ -50,6 +70,9 @@ function renderCarousel(movies = []) {
       </a>`;
   }).join("");
   document.getElementById("recoSection").style.display = "";
+
+  // Initialiser le carousel APRÈS que les items sont dans le DOM
+  initCarousel();
 }
 
 async function loadMovie(movieId) {
@@ -70,15 +93,37 @@ async function loadUserRating(movieId) {
 
 async function loadRecommendations(genre) {
   try {
-    const url = genre
-      ? `${API_BASE}/api/recommendations/category/${encodeURIComponent(genre)}`
-      : `${API_BASE}/api/recommendations/home`;
-    const res = await fetch(url);
-    if (!res.ok) return [];
-    const data = await res.json();
-    return Array.isArray(data) ? data : (data.movies || data.recommendations || []);
-  } catch {
-    return [];
+    let all = [];
+    let page = 1;
+    const limit = 50; // films par page
+
+    while (true) {
+      const url = genre
+        ? `${API_BASE}/api/recommendations/category/${encodeURIComponent(genre)}?page=${page}&limit=${limit}`
+        : `${API_BASE}/api/recommendations/home?page=${page}&limit=${limit}`;
+
+      const res = await fetch(url);
+      if (!res.ok) break;
+
+      const data = await res.json();
+      const movies = Array.isArray(data) ? data : (data.movies || data.recommendations || []);
+
+      if (movies.length === 0) break;
+
+      all = [...all, ...movies];
+
+      // Afficher les premiers résultats immédiatement sans attendre la fin
+      if (page === 1) renderCarousel(all);
+
+      if (movies.length < limit) break; // dernière page atteinte
+      page++;
+    }
+
+    // Mise à jour finale avec tous les films
+    if (page > 1) renderCarousel(all);
+
+  } catch (err) {
+    console.error("Erreur chargement recommandations:", err);
   }
 }
 
@@ -189,22 +234,25 @@ async function init() {
 }
 
 // Carousel
-(function initCarousel() {
+function initCarousel() {
   const track   = document.getElementById("track");
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   if (!track || !prevBtn || !nextBtn) return;
-  let position = 0;
-  const STEP = 220;
-  nextBtn.addEventListener("click", () => {
-    const maxScroll = track.scrollWidth - track.parentElement.clientWidth;
-    position = Math.min(position + STEP, maxScroll);
-    track.style.transform = `translateX(-${position}px)`;
-  });
-  prevBtn.addEventListener("click", () => {
-    position = Math.max(position - STEP, 0);
-    track.style.transform = `translateX(-${position}px)`;
-  });
-})();
 
+  const STEP = 190 + 16; // largeur affiche + gap
+
+  const newPrev = prevBtn.cloneNode(true);
+  const newNext = nextBtn.cloneNode(true);
+  prevBtn.replaceWith(newPrev);
+  nextBtn.replaceWith(newNext);
+
+  newNext.addEventListener("click", () => {
+    track.scrollLeft += STEP * 5; // avance de 5 affiches
+  });
+
+  newPrev.addEventListener("click", () => {
+    track.scrollLeft -= STEP * 5; // recule de 5 affiches
+  });
+}
 document.addEventListener("DOMContentLoaded", init);
