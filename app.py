@@ -4,10 +4,10 @@ from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
 from flask import Flask, render_template, url_for, request
-from test import separer_genre, trouver_film_par_categories
 
 app = Flask(__name__)
 API_BASE = "https://airec-api.randever.com"
+PER_PAGE = 20
 
 
 def api_get(path, params=None):
@@ -16,7 +16,13 @@ def api_get(path, params=None):
         url = f"{url}?{urlencode(params)}"
 
     try:
-        req = Request(url, headers={"Accept": "application/json"})
+        req = Request(
+            url,
+            headers={
+                "Accept": "application/json",
+                "User-Agent": "AiRecFrontend/1.0 (+https://airec-api.randever.com)",
+            },
+        )
         with urlopen(req, timeout=10) as response:
             payload = response.read().decode("utf-8")
             return json.loads(payload)
@@ -92,19 +98,24 @@ def fetch_categories_from_api():
     return extract_categories(payload)
 
 
-def fetch_movies_for_selected_categories(selected_categories):
+def fetch_movies_for_selected_categories(selected_categories, page=1, per_page=PER_PAGE):
     if not selected_categories:
-        return []
+        return [], False
 
     common_keys = None
     movie_index = {}
+    has_next = True
 
     for category in selected_categories:
-        payload = api_get(f"/api/categories/{quote(category, safe='')}/movies", {"page": 1, "sort_by": "rating"})
+        payload = api_get(
+            f"/api/categories/{quote(category, safe='')}/movies",
+            {"page": page, "per_page": per_page, "sort_by": "rating"},
+        )
         if payload is None:
             return None
 
         movies = extract_movies(payload)
+        has_next = has_next and len(movies) == per_page
         keys_for_category = set()
 
         for movie in movies:
@@ -118,9 +129,12 @@ def fetch_movies_for_selected_categories(selected_categories):
         common_keys = keys_for_category if common_keys is None else common_keys & keys_for_category
 
     if not common_keys:
-        return []
+        return [], has_next
 
-    return [movie_index[key] for key in sorted(common_keys, key=lambda key: movie_index[key]["title"].lower())]
+    sorted_movies = [
+        movie_index[key] for key in sorted(common_keys, key=lambda key: movie_index[key]["title"].lower())
+    ]
+    return sorted_movies, has_next
 
 
 @app.route('/')
@@ -144,20 +158,30 @@ def film_detail(movie_id):
 @app.route('/categories', methods=["GET", "POST"])
 def categories():
     genres = fetch_categories_from_api()
-    if not genres:
-        genres = sorted(separer_genre())
+    if genres is None:
+        genres = []
 
     films = []
     selected = []
     api_source = "API"
+    current_page = 1
+    has_next = False
 
     if request.method == "POST":
         selected = [genre for genre in request.form.getlist("genres") if genre]
-        films = fetch_movies_for_selected_categories(selected)
+        page_raw = request.form.get("page", "1")
+        try:
+            current_page = max(1, int(page_raw))
+        except ValueError:
+            current_page = 1
 
-        if films is None:
-            films = [normalize_movie(title) for title in trouver_film_par_categories(selected)]
-            api_source = "CSV"
+        movie_result = fetch_movies_for_selected_categories(selected, page=current_page)
+        if movie_result is None:
+            films = []
+            api_source = "API indisponible"
+            has_next = False
+        else:
+            films, has_next = movie_result
 
     return render_template(
         'categories.html',
@@ -165,6 +189,9 @@ def categories():
         films=films,
         selected=selected,
         api_source=api_source,
+        current_page=current_page,
+        has_prev=current_page > 1,
+        has_next=has_next,
     )
 
 if __name__ == "__main__":
