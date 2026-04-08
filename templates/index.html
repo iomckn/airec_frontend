@@ -9,9 +9,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-<body>
+<body class="page-loading">
 
-<section class="hero">
+<output id="pageLoader" class="page-loader" aria-live="polite">
+    Chargement des recommandations...
+</output>
+
+<section class="hero api-pending" data-api-base="https://airec-api.randever.com">
 
     <header class="topbar">
         <div class="brand">
@@ -19,7 +23,7 @@
         </div>
 
         <nav class="navlinks">
-            <a href="#">Accueil</a>
+            <a href="{{ url_for('index') }}">Accueil</a>
             <a href="{{ url_for('categories') }}">Catégorie</a>
             <a href="{{ url_for('login') }}">Se connecter/S'inscrire</a>
         </nav>
@@ -34,57 +38,58 @@
     </header>
 
     <!-- Flèches -->
-    <div class="arrow left">‹</div>
-    <div class="arrow right">›</div>
+    <button class="arrow left" id="prevMovie" type="button" aria-label="Film précédent">‹</button>
+    <button class="arrow right" id="nextMovie" type="button" aria-label="Film suivant">›</button>
 
     <main class="main">
         <div class="left">
 
             <h1>Découvrez des films faits<br>pour vous grâce à l’IA</h1>
-            <p>Des recommandations personnalisées selon vos goûts et vos avis.</p>
+            <p id="movieOverview">Des recommandations personnalisées selon vos goûts et vos avis.</p>
 
             <div class="movie-title">
-                <span>JOHN</span>
-                <span>WICK 5</span>
+                <span id="movieTitlePrimary">JOHN</span>
+                <span id="movieTitleSecondary">WICK 5</span>
             </div>
 
-            <div class="pills">
+            <div class="pills" id="movieGenres">
                 <div class="pill">Action</div>
                 <div class="pill">Crime</div>
                 <div class="pill">Thriller</div>
             </div>
 
             <div class="rating">
-                <div class="stars">
+                <div class="stars" id="movieStars">
                     <span class="star"></span>
                     <span class="star"></span>
                     <span class="star"></span>
                     <span class="star"></span>
                     <span class="star inactive"></span>
                 </div>
-                <span>8.5/10</span>
+                <span id="movieRating">8.5/10</span>
             </div>
 
         </div>
 
         <div class="bot">
-            <div class="bubble">
+            <div class="bubble" id="botBubble">
                 <strong>Salut !</strong>
-                Comment je peux vous aider aujourd'hui ?
+                Voici une recommandation personnalisée pour vous.
             </div>
             <div class="avatar">🤖</div>
         </div>
 
     </main>
 
-    <div class="dots">
-        <span class="dot"></span>
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
+    <div class="dots" id="movieDots" aria-label="Navigation recommandations">
+        <button class="dot" type="button" aria-label="Aller au film 1"></button>
+        <button class="dot active" type="button" aria-label="Aller au film 2"></button>
+        <button class="dot" type="button" aria-label="Aller au film 3"></button>
+        <button class="dot" type="button" aria-label="Aller au film 4"></button>
     </div>
 
 </section>
 
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>
