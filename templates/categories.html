@@ -34,7 +34,10 @@
 
     <!-- CONTENT -->
     <main class="content">
-      <h2>Choisissez des catégories :</h2>
+        <div class="content-head">
+          <h2>Choisissez des catégories :</h2>
+          <p class="subtitle">Les genres sont chargés depuis l'API publique, puis les films correspondants sont affichés après validation.</p>
+        </div>
 
       <form class="grid" method="POST">
 
@@ -54,15 +57,60 @@
 
 
       </form>
-      {% if films %}
-        <div class="results">
-          <h3>Films trouvés ({{ films|length }}) :</h3>
-          <ul>
-            {% for film in films %}
-              <li>{{ film }}</li>
-            {% endfor %}
-          </ul>
-        </div>
+
+      {% if selected %}
+        <section class="results">
+          <div class="results-header">
+            <div>
+              <h3>Résultats ({{ films|length }})</h3>
+              <p>Filtres appliqués : {{ selected|join(', ') }}</p>
+            </div>
+            <span class="source-badge">Source : {{ api_source }}</span>
+          </div>
+
+          {% if films %}
+            <div class="movie-grid">
+              {% for film in films %}
+                <article class="movie-card">
+                  {% if film.movie_id %}
+                    <a class="movie-link" href="{{ url_for('film_detail', movie_id=film.movie_id) }}">
+                  {% endif %}
+
+                  <div class="poster-wrap">
+                    <img
+                      src="{{ film.poster_url or url_for('static', filename='images/placeholder.jpg') }}"
+                      alt="{{ film.title }}"
+                      class="poster"
+                      onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'"
+                    >
+                  </div>
+
+                  <div class="movie-info">
+                    <h4>{{ film.title }}</h4>
+                    {% if film.release_year %}
+                      <p>{{ film.release_year }}</p>
+                    {% endif %}
+                    {% if film.genres %}
+                      <div class="movie-genres">
+                        {% for genre in film.genres[:3] %}
+                          <span>{{ genre }}</span>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  {% if film.movie_id %}
+                    </a>
+                  {% endif %}
+                </article>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="empty-state">
+              Aucun film ne correspond à ces catégories.
+            </div>
+          {% endif %}
+        </section>
       {% endif %}
 
 

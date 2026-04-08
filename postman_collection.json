@@ -1,0 +1,425 @@
+{
+  "info": {
+    "name": "AiRec API Collection",
+    "description": "Complete API collection for AiRec Movie Recommendation System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://airec-api.randever.com",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123\",\n  \"nom\": \"Doe\",\n  \"prenom\": \"John\",\n  \"favorite_genres\": [\"Action\", \"Sci-Fi\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Movies",
+      "item": [
+        {
+          "name": "Get All Movies",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/movies?page=1&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "movies"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Movie by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/movies/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "movies", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Featured Movies",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/movies/featured?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "movies", "featured"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Movies",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/movies?search=Matrix&genre=Sci-Fi",
+              "host": ["{{base_url}}"],
+              "path": ["api", "movies"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Matrix"
+                },
+                {
+                  "key": "genre",
+                  "value": "Sci-Fi"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ratings",
+      "item": [
+        {
+          "name": "Rate Movie",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 4.5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/movies/1/ratings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "movies", "1", "ratings"]
+            }
+          }
+        },
+        {
+          "name": "Get User's Rating for Movie",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/movies/1/ratings/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "movies", "1", "ratings", "user"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recommendations",
+      "item": [
+        {
+          "name": "Get Personalized Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/recommendations/user?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recommendations", "user"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Home Recommendations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/recommendations/home",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recommendations", "home"]
+            }
+          }
+        },
+        {
+          "name": "Get Genre Recommendations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/recommendations/category/Action",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recommendations", "category", "Action"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chatbot",
+      "item": [
+        {
+          "name": "Chat Query",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"I want a fun action movie for tonight\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chatbot/query",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chatbot", "query"]
+            }
+          }
+        },
+        {
+          "name": "Search Movies by Description",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"movies about space exploration\",\n  \"limit\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chatbot/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chatbot", "search"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Smith\",\n  \"prenom\": \"Jane\",\n  \"favorite_genres\": [\"Comedy\", \"Drama\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Get User Ratings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/ratings?page=1&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "ratings"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Genres",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Movies by Genre",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/categories/Action/movies?page=1&sort_by=rating",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", "Action", "movies"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "rating"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
