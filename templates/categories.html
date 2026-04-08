@@ -40,6 +40,7 @@
         </div>
 
       <form class="grid" method="POST">
+        <input type="hidden" name="page" value="1">
 
         {% for genre in genres %}
         <label class="item">
@@ -104,6 +105,26 @@
                   {% endif %}
                 </article>
               {% endfor %}
+            </div>
+
+            <div class="pagination">
+              <form method="POST" class="page-form">
+                <input type="hidden" name="page" value="{{ current_page - 1 }}">
+                {% for genre in selected %}
+                  <input type="hidden" name="genres" value="{{ genre }}">
+                {% endfor %}
+                <button type="submit" class="page-btn" {% if not has_prev %}disabled{% endif %}>Precedent</button>
+              </form>
+
+              <span class="page-indicator">Page {{ current_page }}</span>
+
+              <form method="POST" class="page-form">
+                <input type="hidden" name="page" value="{{ current_page + 1 }}">
+                {% for genre in selected %}
+                  <input type="hidden" name="genres" value="{{ genre }}">
+                {% endfor %}
+                <button type="submit" class="page-btn" {% if not has_next %}disabled{% endif %}>Suivant</button>
+              </form>
             </div>
           {% else %}
             <div class="empty-state">
