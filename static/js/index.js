@@ -219,4 +219,84 @@
   if (nextBtn) nextBtn.addEventListener('click', () => nextMovie(1));
 
   loadMovies();
+
+  // CHATBOT
+  const preview = document.getElementById("chatbot-preview");
+  const toggleBtn = document.getElementById("chatbot-toggle");
+  const chatbotWindow = document.getElementById("chatbot-window");
+  const closeBtn = document.getElementById("chatbot-close");
+
+  // ouvrir via bulle OU robot
+  preview.addEventListener("click", openChat);
+  toggleBtn.addEventListener("click", openChat);
+
+  function openChat() {
+    chatbotWindow.classList.remove("hidden");
+    preview.style.display = "none";
+  }
+
+  // fermer
+  closeBtn.addEventListener("click", () => {
+    chatbotWindow.classList.add("hidden");
+    preview.style.display = "flex";
+  });
+
+  let sessionId = null;
+
+  const chatForm = document.getElementById("chatForm");
+  const chatInput = document.getElementById("chatInput");
+  const chatbox = document.getElementById("chatbox");
+
+  function addMessage(text, sender) {
+    const div = document.createElement("div");
+    div.className = `message ${sender}`;
+
+    div.innerHTML = text; 
+
+    chatbox.appendChild(div);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  chatForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const message = chatInput.value;
+    addMessage(message, "user");
+    chatInput.value = "";
+
+    try {
+      const res = await fetch(`${API_BASE}/api/chatbot/query`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: message,
+          session_id: sessionId
+        })
+      });
+
+      const data = await res.json();
+      console.log("BOT:", data.response);
+      sessionId = data.session_id;
+
+      let text = data.response;
+
+      if (data.recommendations) {
+        text += "<br><br>";
+        data.recommendations.slice(0, 5).forEach(movie => {
+          text += "🎬 " + movie.title + "<br>";
+        });
+      }
+
+      addMessage(text, "bot");
+      
+
+      } catch (err) {
+        addMessage("Erreur 😢", "bot");
+      }
+  });
+
+
+
 })();
