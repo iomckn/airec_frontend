@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
+
+
 <body class="page-loading">
 
 <output id="pageLoader" class="page-loader" aria-live="polite">
@@ -71,13 +73,30 @@
 
         </div>
 
-        <div class="bot">
-            <div class="bubble" id="botBubble">
-                <strong>Salut !</strong>
-                Voici une recommandation personnalisée pour vous.
-            </div>
-            <div class="avatar">🤖</div>
+        <!-- Bulle d'accueil -->
+        <div id="chatbot-preview">
+            <span>Salut ! Comment je peux vous aider ?</span>
         </div>
+
+        <!-- Bouton robot -->
+        <div id="chatbot-toggle">🤖</div>
+
+        <!-- Fenêtre chatbot -->
+        <div id="chatbot-window" class="hidden">
+            <div class="chat-header">
+                AiRec Assistant
+                <span id="chatbot-close">✖</span>
+            </div>
+
+            <div id="chatbox"></div>
+
+            <form id="chatForm">
+                <input type="text" id="chatInput" placeholder="Tape ton message..." required>
+                <button type="submit">➤</button>
+            </form>
+        </div>
+
+        
 
     </main>
 
