@@ -35,10 +35,17 @@
 
       <h2 class="title">Se connecter</h2>
 
+      {% if login_error %}
+      <p class="login-feedback login-error">{{ login_error }}</p>
+      {% endif %}
+      {% if login_success %}
+      <p class="login-feedback login-success">Connexion réussie, redirection en cours...</p>
+      {% endif %}
+
       <form class="form" method="POST" action="{{ url_for('login') }}">
         <label class="field">
           <span>Email :</span>
-          <input type="email" name="email" required>
+          <input type="email" name="email" value="{{ email or '' }}" required>
         </label>
 
         <label class="field">
@@ -54,10 +61,29 @@
 
       <p class="signup">
         Nouveau sur AIREC ?
-        <a href="#">Inscrivez-vous maintenant</a>
+        <a href="{{ url_for('register') }}">Inscrivez-vous maintenant</a>
       </p>
     </section>
   </main>
+
+  {% if login_success %}
+  <div
+    id="loginPayload"
+    data-access-token="{{ access_token }}"
+    data-refresh-token="{{ refresh_token }}"
+    hidden
+  ></div>
+  <script>
+    const payloadEl = document.getElementById("loginPayload");
+    const accessToken = payloadEl ? payloadEl.dataset.accessToken || "" : "";
+    const refreshToken = payloadEl ? payloadEl.dataset.refreshToken || "" : "";
+    localStorage.setItem("access_token", accessToken);
+    localStorage.setItem("refresh_token", refreshToken);
+    setTimeout(function () {
+      window.location.href = "{{ url_for('index') }}";
+    }, 700);
+  </script>
+  {% endif %}
 
 </body>
 </html>
