@@ -79,20 +79,17 @@
     const value = Number(movie?.rating ?? movie?.average_rating ?? movie?.vote_average ?? 0);
     if (!Number.isFinite(value) || value <= 0) return null;
 
-    // Si la note est sur 5, on la convertit sur 10
-    if (value <= 5) return Number((value * 2).toFixed(1));
-
-    return Number(value.toFixed(1));
+    // Normalise en /5 (l'API TMDB renvoie du /10)
+    const on5 = value > 5 ? value / 2 : value;
+    return Number(on5.toFixed(1));
   }
 
-  function renderStars(ratingOn10) {
+  function renderStars(ratingOn5) {
     if (!starsContainer) return;
 
     const stars = Array.from(starsContainer.querySelectorAll('.star'));
-    const starsOn5 = ratingOn10 ? ratingOn10 / 2 : 0;
-
     stars.forEach((star, index) => {
-      const isActive = index + 1 <= Math.round(starsOn5);
+      const isActive = index + 1 <= Math.round(ratingOn5);
       star.classList.toggle('inactive', !isActive);
     });
   }
@@ -162,7 +159,7 @@
 
     const rating = extractRating(movie);
     if (ratingText) {
-      ratingText.textContent = rating ? `${rating}/10` : 'N/A';
+      ratingText.textContent = rating ? `${rating}/5` : 'N/A';
     }
 
     renderGenres(movie);

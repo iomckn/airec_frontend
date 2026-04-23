@@ -161,9 +161,9 @@ img{
   color: #b9f6d4;
 }
 
-.register-card{
-  max-height: min(82vh, 920px);
-  overflow-y: auto;
+.wrap-top{
+  align-items: flex-start;
+  padding-top: 40px;
 }
 
 .subtitle{
