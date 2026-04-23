@@ -33,12 +33,21 @@
   <main class="page">
 
     <div id="loadingState" class="loading-state">
-      <p>Chargement du film...</p>
+      <p id="loadingMsg">Chargement...</p>
     </div>
 
     <div id="errorState" class="error-state" style="display:none;">
-      <p>Impossible de charger le film. Veuillez réessayer.</p>
+      <p id="errorMsg">Impossible de charger le film. Veuillez réessayer.</p>
     </div>
+
+    <!-- RÉSULTATS DE RECHERCHE -->
+    <section id="searchSection" style="display:none;">
+      <h2 class="search-results-title" id="searchTitle"></h2>
+      <div class="search-grid" id="searchGrid"></div>
+      <p class="search-empty" id="searchEmpty" style="display:none;">
+        Aucun film trouvé pour cette recherche.
+      </p>
+    </section>
 
     <section class="hero" id="heroSection" style="display:none;">
       <div class="left">

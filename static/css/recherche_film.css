@@ -205,10 +205,116 @@ body{
   flex: 0 0 190px;              /* jamais rogné */
 }
 
-/* responsive */
+/* ── RÉSULTATS DE RECHERCHE ─────────────────────────── */
+
+.search-results-title{
+  font-size: 26px;
+  font-weight: 500;
+  margin: 30px 0 24px;
+  opacity: .95;
+}
+
+.search-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 24px;
+}
+
+.movie-card{
+  background: rgba(255,255,255,.07);
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  transition: transform .2s, background .2s;
+}
+
+.movie-card:hover{
+  transform: translateY(-5px);
+  background: rgba(255,255,255,.13);
+}
+
+.movie-card-poster{
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  display: block;
+}
+
+.movie-card-info{
+  padding: 12px 12px 14px;
+}
+
+.movie-card-title{
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movie-card-year{
+  font-size: 12px;
+  opacity: .55;
+  margin-bottom: 8px;
+}
+
+.movie-card-genres{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.genre-tag{
+  font-size: 11px;
+  background: rgba(255,255,255,.15);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.movie-card-rating{
+  font-size: 13px;
+  opacity: .85;
+}
+
+.ratings-count{
+  opacity: .55;
+  font-size: 12px;
+}
+
+.search-empty{
+  text-align: center;
+  font-size: 18px;
+  opacity: .55;
+  margin-top: 80px;
+}
+
+/* ── ÉTATS ──────────────────────────────────────────── */
+
+.loading-state,
+.error-state{
+  text-align: center;
+  padding: 80px 20px;
+  font-size: 18px;
+  opacity: .7;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────── */
+
 @media (max-width: 980px){
   .page{ padding: 20px 24px 60px; }
   .hero{ grid-template-columns: 1fr; gap: 30px; }
   .section-title{ margin-top: 10px; }
   .title{ font-size: 44px; }
+}
+
+@media (max-width: 600px){
+  .search-grid{
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .search-results-title{ font-size: 20px; }
 }

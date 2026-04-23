@@ -13,31 +13,95 @@ function getMovieIdFromURL() {
   return params.get("id");
 }
 
+function showError(msg) {
+  document.getElementById("loadingState").style.display = "none";
+  const errorEl = document.getElementById("errorState");
+  document.getElementById("errorMsg").textContent = msg;
+  errorEl.style.display = "";
+}
+
+// ─── RECHERCHE ────────────────────────────────────────────────
+
+async function searchMovies(query) {
+  const url = `${API_BASE}/api/movies?search=${encodeURIComponent(query)}&per_page=20`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`API error ${res.status}`);
+  const data = await res.json();
+  return Array.isArray(data) ? data : (data.movies || data.results || []);
+}
+
+function renderSearchResults(movies, query) {
+  document.getElementById("loadingState").style.display = "none";
+
+  const count = movies.length;
+  document.getElementById("searchTitle").textContent =
+    `Résultats pour "${query}" — ${count} film${count !== 1 ? "s" : ""}`;
+
+  if (count === 0) {
+    document.getElementById("searchEmpty").style.display = "";
+  } else {
+    document.getElementById("searchGrid").innerHTML = movies.map(m => {
+      const genres = (m.genres || []).slice(0, 3)
+        .map(g => `<span class="genre-tag">${g}</span>`).join("");
+      const rating  = parseFloat(m.average_rating || 0).toFixed(1);
+      const poster  = m.poster_url || "/static/images/placeholder.jpg";
+      const title   = (m.title || "Film").replace(/"/g, "&quot;");
+      return `
+        <a href="/film/${m.id}" class="movie-card">
+          <img src="${poster}" alt="${title}" class="movie-card-poster"
+               onerror="this.src='/static/images/placeholder.jpg'">
+          <div class="movie-card-info">
+            <h3 class="movie-card-title">${m.title || "Film"}</h3>
+            <p class="movie-card-year">${m.release_year || ""}</p>
+            <div class="movie-card-genres">${genres}</div>
+            <p class="movie-card-rating">⭐ ${rating}/5
+              <span class="ratings-count">(${m.ratings_count || 0} avis)</span>
+            </p>
+          </div>
+        </a>`;
+    }).join("");
+  }
+
+  document.getElementById("searchSection").style.display = "";
+}
+
+async function initSearch(query) {
+  document.getElementById("pageTitle").textContent = `AiRec - "${query}"`;
+  document.getElementById("loadingMsg").textContent = `Recherche de "${query}"...`;
+
+  // Pré-remplir la barre de recherche
+  const searchInput = document.querySelector(".search input[name='q']");
+  if (searchInput) searchInput.value = query;
+
+  try {
+    const movies = await searchMovies(query);
+    renderSearchResults(movies, query);
+  } catch (err) {
+    showError("Erreur lors de la recherche. Veuillez réessayer.");
+  }
+}
+
+// ─── DÉTAIL FILM ─────────────────────────────────────────────
+
 function renderAvgStars(ratingOutOf5) {
   const container = document.getElementById("avgStars");
   if (!container) return;
-
   container.innerHTML = "";
-
   for (let i = 1; i <= 5; i++) {
-    const fill = Math.min(Math.max(ratingOutOf5 - (i - 1), 0), 1); // 0 à 1
+    const fill = Math.min(Math.max(ratingOutOf5 - (i - 1), 0), 1);
     const pct  = Math.round(fill * 100);
-
-    const id = `star-grad-${i}`;
-    const svg = `
+    const id   = `star-grad-${i}`;
+    container.insertAdjacentHTML("beforeend", `
       <svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="${id}" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="${pct}%"       stop-color="#f1cf57"/>
-            <stop offset="${pct}%"       stop-color="#bcbcbc"/>
+            <stop offset="${pct}%"  stop-color="#f1cf57"/>
+            <stop offset="${pct}%"  stop-color="#bcbcbc"/>
           </linearGradient>
         </defs>
-        <polygon
-          points="13,2 16,9 24,9 18,14 20,22 13,17 6,22 8,14 2,9 10,9"
-          fill="url(#${id})"
-        />
-      </svg>`;
-    container.insertAdjacentHTML("beforeend", svg);
+        <polygon points="13,2 16,9 24,9 18,14 20,22 13,17 6,22 8,14 2,9 10,9"
+                 fill="url(#${id})"/>
+      </svg>`);
   }
 }
 
@@ -46,7 +110,7 @@ function renderUserStars(ratingOutOf5) {
     btn.classList.toggle("filled", idx < ratingOutOf5);
   });
   document.getElementById("myScore").textContent = ratingOutOf5;
-  document.getElementById("ratingValue").value = ratingOutOf5;
+  document.getElementById("ratingValue").value   = ratingOutOf5;
 }
 
 function renderGenres(genres = []) {
@@ -57,7 +121,7 @@ function renderGenres(genres = []) {
 
 function renderCarousel(movies = []) {
   const track = document.getElementById("track");
-  if (!track || movies.length === 0) return;
+  if (!track || !movies || movies.length === 0) return;
   track.innerHTML = movies.map(movie => {
     const poster = movie.poster_url || movie.poster || "";
     const title  = movie.title || movie.titre || "Film";
@@ -70,8 +134,6 @@ function renderCarousel(movies = []) {
       </a>`;
   }).join("");
   document.getElementById("recoSection").style.display = "";
-
-  // Initialiser le carousel APRÈS que les items sont dans le DOM
   initCarousel();
 }
 
@@ -93,67 +155,48 @@ async function loadUserRating(movieId) {
 
 async function loadRecommendations(genre) {
   try {
-    let all = [];
+    let all  = [];
     let page = 1;
-    const limit = 50; // films par page
-
+    const limit = 50;
     while (true) {
       const url = genre
         ? `${API_BASE}/api/recommendations/category/${encodeURIComponent(genre)}?page=${page}&limit=${limit}`
         : `${API_BASE}/api/recommendations/home?page=${page}&limit=${limit}`;
-
       const res = await fetch(url);
       if (!res.ok) break;
-
-      const data = await res.json();
+      const data   = await res.json();
       const movies = Array.isArray(data) ? data : (data.movies || data.recommendations || []);
-
       if (movies.length === 0) break;
-
       all = [...all, ...movies];
-
-      // Afficher les premiers résultats immédiatement sans attendre la fin
       if (page === 1) renderCarousel(all);
-
-      if (movies.length < limit) break; // dernière page atteinte
+      if (movies.length < limit) break;
       page++;
     }
-
-    // Mise à jour finale avec tous les films
     if (page > 1) renderCarousel(all);
-
   } catch (err) {
     console.error("Erreur chargement recommandations:", err);
   }
 }
 
 async function submitRating(movieId, ratingOutOf5) {
-  const token = getToken();
+  const token    = getToken();
   const statusEl = document.getElementById("ratingStatus");
   if (!token) {
     statusEl.textContent = "Connectez-vous pour noter ce film.";
-    statusEl.className = "rating-status error";
+    statusEl.className   = "rating-status error";
     return;
   }
   try {
     const res = await fetch(`${API_BASE}/api/movies/${movieId}/ratings`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ rating: ratingOutOf5 }),
+      method:  "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body:    JSON.stringify({ rating: ratingOutOf5 }),
     });
-    if (res.ok) {
-      statusEl.textContent = "Note enregistrée ✓";
-      statusEl.className = "rating-status success";
-    } else {
-      statusEl.textContent = "Erreur lors de l'envoi.";
-      statusEl.className = "rating-status error";
-    }
+    statusEl.textContent = res.ok ? "Note enregistrée ✓" : "Erreur lors de l'envoi.";
+    statusEl.className   = res.ok ? "rating-status success" : "rating-status error";
   } catch {
     statusEl.textContent = "Erreur réseau.";
-    statusEl.className = "rating-status error";
+    statusEl.className   = "rating-status error";
   }
   setTimeout(() => { statusEl.textContent = ""; }, 3000);
 }
@@ -176,18 +219,9 @@ function initUserStars(movieId) {
   });
 }
 
-async function init() {
-  const movieId  = getMovieIdFromURL();
+async function initMovieDetail(movieId) {
   const loadingEl = document.getElementById("loadingState");
-  const errorEl   = document.getElementById("errorState");
   const heroEl    = document.getElementById("heroSection");
-
-  if (!movieId) {
-    loadingEl.style.display = "none";
-    errorEl.style.display = "";
-    errorEl.querySelector("p").textContent = "Aucun film spécifié dans l'URL.";
-    return;
-  }
 
   try {
     const [movie, userRatingData] = await Promise.all([
@@ -197,16 +231,13 @@ async function init() {
 
     document.getElementById("movieTitle").textContent = movie.title;
     document.getElementById("pageTitle").textContent  = `AiRec - ${movie.title}`;
-
-    const year = movie.release_year || "";
-    document.getElementById("movieMeta").textContent = year;
+    document.getElementById("movieMeta").textContent  = movie.release_year || "";
+    document.getElementById("movieDesc").textContent  =
+      movie.description || "Aucune description disponible.";
 
     const posterEl = document.getElementById("moviePoster");
     posterEl.src = movie.poster_url || "/static/images/placeholder.jpg";
     posterEl.alt = movie.title;
-
-    document.getElementById("movieDesc").textContent =
-      movie.description || "Aucune description disponible.";
 
     renderGenres(movie.genres || []);
 
@@ -220,39 +251,54 @@ async function init() {
     }
 
     initUserStars(movieId);
-
     loadingEl.style.display = "none";
     heroEl.style.display    = "";
 
-    loadRecommendations(movie.genres?.[0]).then(renderCarousel);
+    loadRecommendations(movie.genres?.[0]);
 
   } catch (err) {
     console.error(err);
-    loadingEl.style.display = "none";
-    errorEl.style.display   = "";
+    showError("Impossible de charger le film. Veuillez réessayer.");
   }
 }
 
-// Carousel
+// ─── CAROUSEL ────────────────────────────────────────────────
+
 function initCarousel() {
   const track   = document.getElementById("track");
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   if (!track || !prevBtn || !nextBtn) return;
 
-  const STEP = 190 + 16; // largeur affiche + gap
+  const STEP = 190 + 16;
 
   const newPrev = prevBtn.cloneNode(true);
   const newNext = nextBtn.cloneNode(true);
   prevBtn.replaceWith(newPrev);
   nextBtn.replaceWith(newNext);
 
-  newNext.addEventListener("click", () => {
-    track.scrollLeft += STEP * 5; // avance de 5 affiches
-  });
-
-  newPrev.addEventListener("click", () => {
-    track.scrollLeft -= STEP * 5; // recule de 5 affiches
-  });
+  newNext.addEventListener("click", () => { track.scrollLeft += STEP * 5; });
+  newPrev.addEventListener("click", () => { track.scrollLeft -= STEP * 5; });
 }
+
+// ─── POINT D'ENTRÉE ──────────────────────────────────────────
+
+async function init() {
+  const params  = new URLSearchParams(window.location.search);
+  const query   = params.get("q");
+  const movieId = getMovieIdFromURL();
+
+  if (query && query.trim()) {
+    await initSearch(query.trim());
+    return;
+  }
+
+  if (movieId) {
+    await initMovieDetail(movieId);
+    return;
+  }
+
+  showError("Aucun film spécifié dans l'URL.");
+}
+
 document.addEventListener("DOMContentLoaded", init);
