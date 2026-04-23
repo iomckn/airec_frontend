@@ -1,13 +1,28 @@
 import json
+import ssl
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
 from flask import Flask, render_template, url_for, request
 
+try:
+    import certifi
+except ImportError:
+    certifi = None
+
 app = Flask(__name__)
 API_BASE = "https://airec-api.randever.com"
 PER_PAGE = 20
+
+
+def build_ssl_context():
+    if certifi is not None:
+        return ssl.create_default_context(cafile=certifi.where())
+    return ssl.create_default_context()
+
+
+SSL_CONTEXT = build_ssl_context()
 
 
 def api_get(path, params=None):
@@ -23,11 +38,45 @@ def api_get(path, params=None):
                 "User-Agent": "AiRecFrontend/1.0 (+https://airec-api.randever.com)",
             },
         )
-        with urlopen(req, timeout=10) as response:
+        with urlopen(req, timeout=10, context=SSL_CONTEXT) as response:
             payload = response.read().decode("utf-8")
             return json.loads(payload)
     except (HTTPError, URLError, json.JSONDecodeError, ValueError):
         return None
+
+
+def api_post(path, body=None):
+    url = f"{API_BASE}{path}"
+    payload = None
+
+    if body is not None:
+        payload = json.dumps(body).encode("utf-8")
+
+    req = Request(
+        url,
+        data=payload,
+        headers={
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "User-Agent": "AiRecFrontend/1.0 (+https://airec-api.randever.com)",
+        },
+        method="POST",
+    )
+
+    try:
+        with urlopen(req, timeout=10, context=SSL_CONTEXT) as response:
+            raw_payload = response.read().decode("utf-8")
+            parsed_payload = json.loads(raw_payload) if raw_payload else {}
+            return parsed_payload, response.getcode()
+    except HTTPError as error:
+        try:
+            raw_payload = error.read().decode("utf-8")
+            parsed_payload = json.loads(raw_payload) if raw_payload else {}
+        except (json.JSONDecodeError, ValueError):
+            parsed_payload = {}
+        return parsed_payload, error.code
+    except (URLError, ValueError):
+        return None, None
 
 
 def extract_list(payload, keys):
@@ -144,7 +193,110 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    login_error = ""
+    login_success = False
+    access_token = ""
+    refresh_token = ""
+    email = ""
+
+    if request.method == "POST":
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+
+        if not email or not password:
+            login_error = "Veuillez remplir votre email et mot de passe."
+        else:
+            payload, status_code = api_post(
+                "/api/auth/login",
+                {"email": email, "password": password},
+            )
+
+            if status_code == 200 and isinstance(payload, dict):
+                access_token = payload.get("access_token", "")
+                refresh_token = payload.get("refresh_token", "")
+                if access_token:
+                    login_success = True
+                else:
+                    login_error = "Connexion échouée: réponse API incomplète."
+            elif status_code == 401:
+                login_error = "Identifiants invalides."
+            elif status_code == 400:
+                login_error = "Données manquantes ou invalides."
+            elif status_code is None:
+                login_error = "API indisponible pour le moment."
+            else:
+                login_error = "Erreur inattendue lors de la connexion."
+
+    return render_template(
+        "login.html",
+        login_error=login_error,
+        login_success=login_success,
+        access_token=access_token,
+        refresh_token=refresh_token,
+        email=email,
+    )
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    register_error = ""
+    register_success = False
+    genres = fetch_categories_from_api() or []
+    selected_genres = []
+    form_data = {
+        "prenom": "",
+        "nom": "",
+        "email": "",
+    }
+
+    if request.method == "POST":
+        form_data["prenom"] = request.form.get("prenom", "").strip()
+        form_data["nom"] = request.form.get("nom", "").strip()
+        form_data["email"] = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+        selected_genres = [genre for genre in request.form.getlist("favorite_genres") if genre]
+
+        if not form_data["prenom"] or not form_data["nom"] or not form_data["email"] or not password:
+            register_error = "Veuillez remplir tous les champs obligatoires."
+        elif password != confirm_password:
+            register_error = "Les mots de passe ne correspondent pas."
+        else:
+            body = {
+                "prenom": form_data["prenom"],
+                "nom": form_data["nom"],
+                "email": form_data["email"],
+                "password": password,
+            }
+            if selected_genres:
+                body["favorite_genres"] = selected_genres
+
+            payload, status_code = api_post("/api/auth/register", body)
+
+            if status_code == 201:
+                register_success = True
+                form_data = {"prenom": "", "nom": "", "email": ""}
+                selected_genres = []
+            elif status_code == 409:
+                register_error = "Cet email est déjà utilisé."
+            elif status_code == 400:
+                if isinstance(payload, dict):
+                    register_error = payload.get("error") or payload.get("message") or "Données invalides."
+                else:
+                    register_error = "Données invalides."
+            elif status_code is None:
+                register_error = "API indisponible pour le moment."
+            else:
+                register_error = "Erreur inattendue lors de l'inscription."
+
+    return render_template(
+        "register.html",
+        register_error=register_error,
+        register_success=register_success,
+        genres=genres,
+        selected_genres=selected_genres,
+        form_data=form_data,
+    )
 
 @app.route("/recherche_film")
 def recherche_film():
