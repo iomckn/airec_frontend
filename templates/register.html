@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AiRec - Inscription</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_nav.css') }}">
+  <script>if(localStorage.getItem('access_token'))document.documentElement.classList.add('logged-in');</script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="{{ url_for('static', filename='images/airec_logo.png') }}" alt="Logo">
+    </div>
+
+    <nav class="navlinks">
+      <a href="{{ url_for('index') }}">Accueil</a>
+      <a href="{{ url_for('categories') }}">Catégorie</a>
+      <a class="navAuthLink" href="{{ url_for('login') }}">Se connecter</a>
+      <a class="navAuthLink" href="#">S'inscrire</a>
+    </nav>
+
+    <div class="spacer"></div>
+
+    <form class="search" action="{{ url_for('recherche_film') }}" method="GET">
+      <span>🔎</span>
+      <input type="text" name="q" placeholder="Chercher un film, série ..." required>
+    </form>
+  </header>
+
+  <main class="wrap wrap-top">
+    <section class="card register-card">
+      <img class="logo-center" src="{{ url_for('static', filename='images/airec_logo.png') }}" alt="AiRec">
+
+      <h2 class="title">Créer un compte</h2>
+      <p class="subtitle">Rejoignez AiRec pour des recommandations personnalisées</p>
+
+      {% if register_error %}
+      <p class="login-feedback login-error">{{ register_error }}</p>
+      {% endif %}
+
+      {% if register_success %}
+      <p class="login-feedback login-success">
+        Compte créé avec succès ! <a href="{{ url_for('login') }}" style="color:#b9f6d4;font-weight:700;">Se connecter →</a>
+      </p>
+      {% else %}
+
+      <form class="form" method="POST" action="{{ url_for('register') }}">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <label class="field">
+            <span>Prénom *</span>
+            <input type="text" name="prenom" value="{{ form_data.prenom }}" required placeholder="Jean">
+          </label>
+          <label class="field">
+            <span>Nom *</span>
+            <input type="text" name="nom" value="{{ form_data.nom }}" required placeholder="Dupont">
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Email *</span>
+          <input type="email" name="email" value="{{ form_data.email }}" required placeholder="jean@exemple.com">
+        </label>
+
+        <label class="field">
+          <span>Mot de passe *</span>
+          <input type="password" name="password" required placeholder="8 caractères minimum">
+        </label>
+
+        <label class="field">
+          <span>Confirmer le mot de passe *</span>
+          <input type="password" name="confirm_password" required placeholder="Retapez votre mot de passe">
+        </label>
+
+        {% if genres %}
+        <div class="genre-select">
+          <p>Genres préférés <span style="opacity:.55;">(optionnel)</span></p>
+          <div class="checkbox-grid">
+            {% for genre in genres %}
+            <label class="checkbox-item">
+              <input type="checkbox" name="favorite_genres" value="{{ genre }}"
+                     {% if genre in selected_genres %}checked{% endif %}>
+              {{ genre }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <button class="btn" type="submit"
+                style="background:#b44cd6;color:#fff;margin-top:6px;">
+          Créer mon compte
+        </button>
+      </form>
+
+      {% endif %}
+
+      <p class="signup" style="margin-top:18px;">
+        Déjà un compte ?
+        <a href="{{ url_for('login') }}">Se connecter</a>
+      </p>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>

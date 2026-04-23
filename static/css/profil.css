@@ -1,0 +1,294 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Arial, sans-serif;
+  background: #2f2f2f;
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* ── PAGE LAYOUT ─────────────────────────────────────── */
+
+.page {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+  padding: 30px 50px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── CARD PROFIL ─────────────────────────────────────── */
+
+.profile-card {
+  background: rgba(255,255,255,.06);
+  border-radius: 18px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  height: fit-content;
+}
+
+.avatar-large {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #b44cd6;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-name {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.profile-email {
+  font-size: 14px;
+  opacity: .55;
+  margin-top: -8px;
+}
+
+/* ── GENRES ──────────────────────────────────────────── */
+
+.genres-section {
+  width: 100%;
+  text-align: left;
+}
+
+.genres-section h4 {
+  font-size: 13px;
+  opacity: .55;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 10px;
+}
+
+.genres-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.genre-pill {
+  font-size: 12px;
+  background: rgba(180,76,214,.25);
+  border: 1px solid rgba(180,76,214,.5);
+  color: #d89ef0;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.no-genres {
+  font-size: 13px;
+  opacity: .4;
+}
+
+/* ── BOUTON EDIT ─────────────────────────────────────── */
+
+.btn-edit {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  transition: background .15s;
+}
+
+.btn-edit:hover { background: rgba(255,255,255,.08); }
+
+/* ── FORMULAIRE ÉDITION ──────────────────────────────── */
+
+.edit-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.edit-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  opacity: .8;
+}
+
+.edit-form input[type="text"] {
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-size: 15px;
+  padding: 0 14px;
+  outline: none;
+}
+
+.edit-form input[type="text"]:focus {
+  border-color: #b44cd6;
+}
+
+.genre-edit-label {
+  font-size: 13px;
+  opacity: .8;
+  margin-bottom: -4px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: rgba(0,0,0,.25);
+  border-radius: 10px;
+  padding: 12px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.checkbox-item input { cursor: pointer; }
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary {
+  flex: 1;
+  padding: 11px;
+  border: none;
+  border-radius: 10px;
+  background: #b44cd6;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity .15s;
+}
+
+.btn-primary:hover { opacity: .85; }
+
+.btn-cancel {
+  flex: 1;
+  padding: 11px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.edit-feedback {
+  font-size: 13px;
+  text-align: center;
+  min-height: 18px;
+}
+
+.edit-feedback.success { color: #7ef7b4; }
+.edit-feedback.error   { color: #ff8080; }
+
+/* ── ACTIVITÉ ────────────────────────────────────────── */
+
+.profile-activity { min-width: 0; }
+
+.activity-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.ratings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.rating-card {
+  background: rgba(255,255,255,.06);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  transition: transform .2s;
+}
+
+.rating-card:hover { transform: translateY(-4px); }
+
+.rating-card img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  display: block;
+}
+
+.rating-card-info {
+  padding: 10px 10px 12px;
+}
+
+.rating-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rating-card-score {
+  font-size: 13px;
+  color: #f1cf57;
+}
+
+.loading-msg,
+.empty-msg {
+  font-size: 15px;
+  opacity: .5;
+  padding: 40px 0;
+}
+
+/* ── NON CONNECTÉ ────────────────────────────────────── */
+
+.not-logged {
+  text-align: center;
+  padding: 100px 20px;
+  font-size: 18px;
+  opacity: .7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────── */
+
+@media (max-width: 860px) {
+  .page {
+    grid-template-columns: 1fr;
+    padding: 20px 24px 60px;
+  }
+  .profile-card { flex-direction: column; }
+}

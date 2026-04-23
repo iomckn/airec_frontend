@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AiRec - Mon profil</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profil.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_nav.css') }}">
+  <script>if(localStorage.getItem('access_token'))document.documentElement.classList.add('logged-in');</script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="{{ url_for('static', filename='images/airec_logo.png') }}" alt="Logo">
+    </div>
+    <nav class="navlinks">
+      <a href="{{ url_for('index') }}">Accueil</a>
+      <a href="{{ url_for('categories') }}">Catégorie</a>
+      <a class="navAuthLink" href="{{ url_for('login') }}">Se connecter</a>
+      <a class="navAuthLink" href="{{ url_for('register') }}">S'inscrire</a>
+    </nav>
+    <div class="spacer"></div>
+    <form class="search" action="{{ url_for('recherche_film') }}" method="GET">
+      <span>🔎</span>
+      <input type="text" name="q" placeholder="Chercher un film, série ..." required>
+    </form>
+  </header>
+
+  <!-- Redirection si non connecté -->
+  <div id="notLoggedIn" style="display:none;" class="not-logged">
+    <p>Vous devez être connecté pour accéder à votre profil.</p>
+    <a href="/login" class="btn-primary">Se connecter</a>
+  </div>
+
+  <main id="profileContent" class="page" style="display:none;">
+
+    <!-- ── COLONNE GAUCHE : infos utilisateur ── -->
+    <aside class="profile-card">
+
+      <div class="avatar-large" id="avatarLarge">?</div>
+      <h2 class="profile-name" id="profileName">—</h2>
+      <p class="profile-email" id="profileEmail">—</p>
+
+      <div class="genres-section">
+        <h4>Genres préférés</h4>
+        <div class="genres-tags" id="profileGenres">
+          <span class="no-genres">Aucun genre renseigné</span>
+        </div>
+      </div>
+
+      <button class="btn-edit" id="editToggleBtn">✏️ Modifier mon profil</button>
+
+      <!-- Formulaire d'édition (masqué par défaut) -->
+      <form class="edit-form" id="editForm" style="display:none;">
+        <label>
+          Prénom
+          <input type="text" id="editPrenom" name="prenom">
+        </label>
+        <label>
+          Nom
+          <input type="text" id="editNom" name="nom">
+        </label>
+
+        <div class="genre-edit-label">Genres préférés</div>
+        <div class="checkbox-grid" id="genreCheckboxes">
+          <!-- Généré par JS -->
+        </div>
+
+        <div class="edit-actions">
+          <button type="submit" class="btn-primary">Enregistrer</button>
+          <button type="button" class="btn-cancel" id="cancelEditBtn">Annuler</button>
+        </div>
+        <p class="edit-feedback" id="editFeedback"></p>
+      </form>
+    </aside>
+
+    <!-- ── COLONNE DROITE : activité ── -->
+    <section class="profile-activity">
+
+      <h3 class="activity-title">Mes dernières notes</h3>
+
+      <div id="ratingsLoading" class="loading-msg">Chargement...</div>
+      <div id="ratingsEmpty" class="empty-msg" style="display:none;">
+        Vous n'avez pas encore noté de films.
+      </div>
+
+      <div class="ratings-grid" id="ratingsGrid"></div>
+
+    </section>
+
+  </main>
+
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/profil.js') }}"></script>
+</body>
+</html>
