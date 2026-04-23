@@ -6,6 +6,7 @@
   <title>AiRec - Connexion</title>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_nav.css') }}">
 </head>
 <body>
 
@@ -17,7 +18,8 @@
         <nav class="navlinks">
             <a href="{{ url_for('index') }}">Accueil</a>
             <a href="{{ url_for('categories') }}">Catégorie</a>
-            <a href="#">Se connecter/S'inscrire</a>
+            <a class="navAuthLink" href="#">Se connecter</a>
+            <a class="navAuthLink" href="{{ url_for('register') }}">S'inscrire</a>
         </nav>
 
         <div class="spacer"></div>
@@ -85,5 +87,6 @@
   </script>
   {% endif %}
 
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 </body>
 </html>

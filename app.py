@@ -298,6 +298,11 @@ def register():
         form_data=form_data,
     )
 
+@app.route("/profil")
+def profil():
+    return render_template("profil.html")
+
+
 @app.route("/recherche_film")
 def recherche_film():
     query = request.args.get("q")  # récupère ce qui a été tapé

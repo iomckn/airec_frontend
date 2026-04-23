@@ -2,73 +2,9 @@
 
 body{
   font-family: Arial, sans-serif;
-  background: #2f2f2f; 
+  background: #2f2f2f;
   color: #fff;
   min-height: 100vh;
-}
-
-*{ margin:0; padding:0; box-sizing:border-box; }
-
-body{
-  font-family: Arial, sans-serif;
-  background: #5a5a5a; /* gris */
-  color: #fff;
-  min-height: 100vh;
-}
-
-/* NAVBAR (comme sur index) */
-.topbar{
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  padding: 20px 40px;
-}
-
-.brand img{
-  height: 40px;     /* taille logo navbar */
-  width: auto;
-  display: block;
-}
-
-.navlinks{
-  display: flex;
-  gap: 30px;
-}
-
-.navlinks a{
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.navlinks a:hover{
-  text-decoration: underline;
-}
-
-.spacer{
-  flex: 1;
-}
-
-.search{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255,255,255,0.55);
-  border-radius: 10px;
-  padding: 10px 14px;
-  width: 320px;
-}
-
-.search input{
-  border: none;
-  outline: none;
-  background: transparent;
-  width: 100%;
-  color: #222;
-}
-
-.search input::placeholder{
-  color:#333;
 }
 
 /* Center card */

@@ -113,96 +113,6 @@ body.page-loading .hero{
     backdrop-filter: blur(4px);
 }
 
-/* NAVBAR */
-
-.topbar{
-    display: flex;
-    align-items: center;
-    padding: 14px 24px;
-    margin: 20px 28px 0;
-    border-radius: 18px;
-    background: linear-gradient(120deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.brand img{
-    height: 42px;
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
-}
-
-.navlinks{
-    margin-left: 40px;
-    display: flex;
-    gap: 30px;
-}
-
-.navlinks a{
-    text-decoration: none;
-    color: rgba(255,255,255,0.94);
-    font-weight: 600;
-    position: relative;
-    transition: color .2s ease;
-}
-
-.navlinks a::after{
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -5px;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    transition: width .2s ease;
-}
-
-.navlinks a:hover{
-    color: #fff;
-}
-
-.navlinks a:hover::after{
-    width: 100%;
-}
-
-.spacer{
-    flex: 1;
-}
-
-.auth{
-    margin-right: 20px;
-    font-size: 12px;
-}
-
-.search{
-    display: flex;
-    align-items: center;
-    background: rgba(255,255,255,0.12);
-    padding: 10px 14px;
-    border-radius: 12px;
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.16);
-    transition: border-color .2s ease, box-shadow .2s ease;
-}
-
-.search input{
-    border: none;
-    background: transparent;
-    color: white;
-    margin-left: 5px;
-    outline: none;
-    min-width: 220px;
-}
-
-.search input::placeholder{
-    color: rgba(255,255,255,0.7);
-}
-
-.search:focus-within{
-    border-color: rgba(127,92,255,0.8);
-    box-shadow: 0 0 0 3px rgba(127,92,255,0.25);
-}
-
 /* CONTENU */
 
 .main{
@@ -389,36 +299,12 @@ body.page-loading .hero{
 }
 
 .arrow:focus-visible,
-.dot:focus-visible,
-.search input:focus-visible,
-.navlinks a:focus-visible{
+.dot:focus-visible{
     outline: 2px solid rgba(127,92,255,0.95);
     outline-offset: 2px;
 }
 
 @media (max-width: 980px){
-    .topbar{
-        margin: 14px 14px 0;
-        padding: 12px 14px;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .navlinks{
-        margin-left: 10px;
-        gap: 18px;
-    }
-
-    .search{
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-    .search input{
-        min-width: 0;
-        width: 100%;
-    }
-
     .main{
         flex-direction: column;
         align-items: flex-start;

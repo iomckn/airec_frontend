@@ -16,91 +16,6 @@ body {
   min-height: 100vh;
 }
 
-.topbar{
-    display: flex;
-    align-items: center;
-    padding: 14px 24px;
-    margin: 20px 28px 0;
-    border-radius: 18px;
-
-    background: linear-gradient(120deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
-    backdrop-filter: blur(12px);
-
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-
-
-.brand img {
-  height: 40px;
-  width: auto;
-  display: block;
-}
-
-.navlinks a::after{
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -5px;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    transition: width .2s ease;
-}
-
-.navlinks a:hover::after{
-    width: 100%;
-}
-
-.navlinks a{
-    position: relative;
-    text-decoration: none;
-    color: rgba(255,255,255,0.94);
-    font-weight: 600;
-}
-
-.navlinks{
-    margin-left: 40px;
-    display: flex;
-    gap: 30px;
-}
-
-.spacer{
-    flex: 1;
-}
-
-.auth{
-    margin-right: 20px;
-    font-size: 14px;
-}
-
-.spacer {
-  flex: 1;
-}
-
-.search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.55);
-  border-radius: 10px;
-  padding: 10px 14px;
-  width: 320px;
-}
-
-.search input {
-  border: none;
-  outline: none;
-  background: transparent;
-  width: 100%;
-  color: #222;
-}
-
-.search input::placeholder {
-  color: #333;
-}
-
 .content {
   margin-top: 48px;
   padding: 0 30px 40px;
@@ -332,14 +247,6 @@ body {
 }
 
 @media (max-width: 700px) {
-  .topbar {
-    flex-wrap: wrap;
-  }
-
-  .search {
-    width: 100%;
-  }
-
   .grid {
     grid-template-columns: repeat(2, minmax(160px, 1fr));
   }

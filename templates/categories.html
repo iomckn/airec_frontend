@@ -6,6 +6,8 @@
   <title>AiRec - Catégories</title>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/categories.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_nav.css') }}">
+  <script>if(localStorage.getItem('access_token'))document.documentElement.classList.add('logged-in');</script>
 </head>
 <body>
 
@@ -20,7 +22,8 @@
         <nav class="navlinks">
             <a href="{{ url_for('index') }}">Accueil</a>
             <a href="#">Catégorie</a>
-            <a href="{{ url_for('login') }}">Se connecter/S'inscrire</a>
+            <a class="navAuthLink" href="{{ url_for('login') }}">Se connecter</a>
+            <a class="navAuthLink" href="{{ url_for('register') }}">S'inscrire</a>
         </nav>
 
         <div class="spacer"></div>
@@ -139,5 +142,6 @@
 
   </div>
 
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 </body>
 </html>

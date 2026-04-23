@@ -6,6 +6,8 @@
   <title id="pageTitle">AiRec - Film</title>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/recherche_film.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_nav.css') }}">
+  <script>if(localStorage.getItem('access_token'))document.documentElement.classList.add('logged-in');</script>
 </head>
 <body>
 
@@ -18,7 +20,8 @@
     <nav class="navlinks">
       <a href="{{ url_for('index') }}">Accueil</a>
       <a href="{{ url_for('categories') }}">Catégorie</a>
-      <a href="{{ url_for('login') }}">Se connecter/S'inscrire</a>
+      <a class="navAuthLink" href="{{ url_for('login') }}">Se connecter</a>
+      <a class="navAuthLink" href="{{ url_for('register') }}">S'inscrire</a>
     </nav>
 
     <div class="spacer"></div>
@@ -101,5 +104,6 @@
   </main>
 
   <script src="{{ url_for('static', filename='js/recherche_film.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 </body>
 </html>

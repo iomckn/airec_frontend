@@ -7,55 +7,6 @@ body{
   min-height: 100vh;
 }
 
-/* TOPBAR  */
-.topbar{
-    display: flex;
-    align-items: center;
-    padding: 20px 40px;
-}
-
-.brand img{
-    height: 40px;
-}
-
-.navlinks{
-    margin-left: 40px;
-    display: flex;
-    gap: 30px;
-}
-
-.navlinks a{
-    text-decoration: none;
-    color: white;
-    font-weight: 600;
-}
-
-.spacer{
-    flex: 1;
-}
-
-.auth{
-    margin-right: 20px;
-    font-size: 12px;
-}
-
-.search{
-    display: flex;
-    align-items: center;
-    background: rgba(255,255,255,0.15);
-    padding: 8px 12px;
-    border-radius: 10px;
-    backdrop-filter: blur(6px);
-}
-
-.search input{
-    border: none;
-    background: transparent;
-    color: white;
-    margin-left: 5px;
-    outline: none;
-}
-
 /* PAGE */
 .page{
   padding: 20px 60px 60px;
